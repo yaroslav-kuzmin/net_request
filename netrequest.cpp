@@ -86,7 +86,7 @@ void NetRequest::getReadyRead()
 	QString str = strDec(byteArray);
 	if (strDec.hasError()) {
 		str.clear();
-		str.append(byteArray.toHex());
+		str.append(byteArray.toHex(' '));
 	}
 	emit readData(str);
 }
