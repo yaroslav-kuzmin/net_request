@@ -32,40 +32,24 @@ NetRequest::~NetRequest()
 {
 }
 
-int NetRequest::process(QString & answer)
+int NetRequest::process(const QString & strUrl)
 {
-	if (!answer.contains("://"))
-		answer.prepend("https://");
+	QString str(strUrl);
 
-	QUrl url = QUrl::fromUserInput(answer);
+	if (!str.contains("://"))
+		str.prepend("https://");
+
+	QUrl url = QUrl::fromUserInput(str);
 	if (!url.isValid()) {
-		answer.clear();
-		answer.append(tr("Invalid URL %1").arg(url.errorString()));
-		return 1;
+		return INVALID_URL;
 	}
-	answer.clear();
-
-	if (url.scheme().isEmpty()) {
-		answer.append("Invalid scheme");
-		return 1;
-	}
-
-	if (url.host().isEmpty()) {
-		answer.append("Invalid host");
-		return 1;
-	}
-
-	if (url.port() == -1)
-		url.setPort(80);
 
 	QNetworkRequest netRequest(url);
 	netReply.reset(netManager.get(netRequest));
 
 	connect(netReply.get(), &QNetworkReply::finished, this, &NetRequest::getFinished);
 	connect(netReply.get(), &QIODevice::readyRead, this, &NetRequest::getReadyRead);
-	answer.append(url.toString());
-	answer.append("\nWait..\n");
-	return 0;
+	return REQUEST_START;
 }
 
 void NetRequest::getFinished()

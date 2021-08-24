@@ -31,11 +31,13 @@
 class NetRequest : public QObject
 {
 Q_OBJECT
+public:
+	enum {OK = 0, INVALID_URL, REQUEST_START};
 
 public:
 	NetRequest();
 	~NetRequest();
-	int process(QString & str);
+	int process(const QString & str);
 	bool checkProcess();
 	void stop();
 signals:

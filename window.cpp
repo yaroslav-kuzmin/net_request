@@ -76,7 +76,9 @@ void Window::loadGetRequest(bool checked)
 	QPalette palette = plainTextEdit->palette();
 
 	int rc = netRequest->process(str);
-	if (rc != 0)  {
+	if (rc == NetRequest::INVALID_URL) {
+		str.clear();
+		str.append(tr("Invalid URL"));
 		palette.setColor(QPalette::Text, Qt::red);
 		firstData = false;
 	}
